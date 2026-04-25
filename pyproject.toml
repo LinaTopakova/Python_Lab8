@@ -1,0 +1,13 @@
+[project]
+name = "topakova-pv-error-handling"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.136.1",
+    "loguru>=0.7.3",
+    "pydantic>=2.13.3",
+    "pydantic-settings>=2.14.0",
+    "uvicorn>=0.46.0",
+]
