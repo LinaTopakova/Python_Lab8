@@ -9,9 +9,12 @@ from app.handlers import (
     global_exception_handler,
     validation_exception_handler,
 )
+from app.middleware import RequestIDMiddleware
 from app.routers import users_router, test_router
 
 app = FastAPI(title=settings.app_name)
+
+app.add_middleware(RequestIDMiddleware)
 
 app.include_router(users_router)
 app.include_router(test_router)
