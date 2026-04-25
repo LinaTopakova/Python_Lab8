@@ -1,8 +1,10 @@
 ﻿from fastapi import APIRouter
 
+from app.schemas import UserCreate
+
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/")
-async def get_users():
-    return [{"id": 1, "name": "Ivan"}]
+@router.post("/register")
+async def register(user: UserCreate):
+    return {"username": user.username, "email": user.email}
