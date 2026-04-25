@@ -1,6 +1,7 @@
 ﻿import sys
 import uuid
 import json
+import datetime
 from loguru import logger
 from app.config import settings
 from fastapi import Request
@@ -45,9 +46,23 @@ def setup_logging():
         level=settings.log_level,
         colorize=True
     )
+
+    # Комбинированная ротация: ежедневно или при превышении 10 МБ
+    last_rotation_date = datetime.date.today()
+
+    def rotation_func(msg, file):
+        nonlocal last_rotation_date
+        today = datetime.date.today()
+        if today != last_rotation_date:
+            last_rotation_date = today
+            return True
+        if file.tell() + len(msg) > 10 * 1024 * 1024:
+            return True
+        return False
+
     logger.add(
         settings.log_file,
-        rotation="1 day",
+        rotation=rotation_func,
         retention="7 days",
         compression="gz",
         serialize=True,
