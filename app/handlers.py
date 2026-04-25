@@ -1,10 +1,24 @@
 ﻿from fastapi import Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.exceptions import CustomExceptionA, CustomExceptionB
 from app.schemas import ErrorResponse, ProblemDetails, ValidationErrorDetail
 from app.logging_config import log_error
+
+
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    await log_error(request, exc, exc.status_code)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=ErrorResponse(
+            status_code=exc.status_code,
+            error_type="HTTPException",
+            message=exc.detail,
+            details=None
+        ).model_dump()
+    )
 
 
 async def custom_exception_a_handler(request: Request, exc: CustomExceptionA):
